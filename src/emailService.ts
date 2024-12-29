@@ -29,6 +29,8 @@ export const sendEmailWithPDF = async (
   // Generate PDF content
   const pdfBuffer2 = (await generatePDF()) as any;
 
+  console.log({ to });
+
   // Configure email options
   const mailOptions = {
     from: config.smtpUser,

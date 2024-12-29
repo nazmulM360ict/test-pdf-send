@@ -36,6 +36,7 @@ const transporter = nodemailer_1.default.createTransport({
 const sendEmailWithPDF = (to, subject, message, pdfContent) => __awaiter(void 0, void 0, void 0, function* () {
     // Generate PDF content
     const pdfBuffer2 = (yield (0, pdfUtils_1.generatePDF)());
+    console.log({ to });
     // Configure email options
     const mailOptions = {
         from: config_1.config.smtpUser,
