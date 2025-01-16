@@ -9,22 +9,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const emailService_1 = require("./emailService");
-const router = (0, express_1.Router)();
-router.post('/send-email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { to, subject, message, pdfContent } = req.body;
+exports.asyncWrapper = void 0;
+const appError_1 = require("./appError");
+const asyncWrapper = (fn, schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (0, emailService_1.sendEmailWithPDF)(to, subject, message, pdfContent);
-        res
-            .status(200)
-            .json({ success: true, message: 'Email with PDF sent successfully!' });
+        if (schema) {
+            yield schema.validateAsync(req.body, { abortEarly: false });
+        }
+        yield fn(req, res, next);
     }
     catch (error) {
-        console.error(error);
-        res
-            .status(500)
-            .json({ success: false, message: 'Failed to send email with PDF' });
+        next(new appError_1.AppError(error.message, 400));
     }
-}));
-exports.default = router;
+});
+exports.asyncWrapper = asyncWrapper;
