@@ -11,8 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const asyncWrapper_1 = require("../middlewares/asyncWrapper");
+const expressValidatorAssync_1 = require("../middlewares/expressValidatorAssync");
 const user_service_1 = require("../services/user.service");
-const user_validation_1 = require("../validations/user.validation");
+const express_validator_1 = require("../validations/express.validator");
 class UserController {
     constructor() {
         this.getAll = (0, asyncWrapper_1.asyncWrapper)((req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -23,10 +24,10 @@ class UserController {
             const user = yield this.userService.findOne(req.params.id);
             res.json(user);
         }));
-        this.create = (0, asyncWrapper_1.asyncWrapper)((req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.create = (0, expressValidatorAssync_1.exAsyncWrapper)((req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = yield this.userService.create(req.body);
             res.status(201).json(user);
-        }), user_validation_1.userSchema);
+        }), express_validator_1.userValidationSchema);
         this.update = (0, asyncWrapper_1.asyncWrapper)((req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = yield this.userService.update(req.params.id, req.body);
             res.json(user);

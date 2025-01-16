@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppError = void 0;
 class AppError extends Error {
-    constructor(message, statusCode, isOperational = true) {
+    constructor(message, statusCode, errors) {
         super(message);
         this.statusCode = statusCode;
-        this.isOperational = isOperational;
-        // Ensure the name is the same as the class name
-        Object.setPrototypeOf(this, new.target.prototype);
-        // Capture stack trace
-        Error.captureStackTrace(this);
+        this.errors = errors;
+        // Ensure correct prototype chain
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, AppError);
+        }
     }
 }
 exports.AppError = AppError;

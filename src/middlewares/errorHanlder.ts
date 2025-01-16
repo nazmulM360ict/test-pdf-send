@@ -7,19 +7,22 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  let statusCode = 500;
-  let message = 'Internal Server Error';
+  const statusCode = err instanceof AppError ? err.statusCode : 500;
+  const message =
+    err instanceof AppError ? err.message : 'Internal Server Error';
+  const errors = err instanceof AppError ? err.errors : undefined;
 
-  // If the error is an instance of AppError, extract details
-  if (err instanceof AppError) {
-    statusCode = err.statusCode;
-    message = err.message;
-  } else {
+  console.log(err);
+
+  // Log unexpected errors for debugging purposes
+  if (!(err instanceof AppError)) {
     console.error('Unexpected Error:', err);
   }
 
+  // Send the response, including validation errors if they exist
   res.status(statusCode).json({
     success: false,
     message,
+    ...(errors && { errors }), // Include errors only if they exist
   });
 };

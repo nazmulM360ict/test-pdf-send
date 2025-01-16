@@ -1,17 +1,21 @@
+import { ValidationError } from 'express-validator';
+
 export class AppError extends Error {
   public statusCode: number;
-  public isOperational: boolean;
+  public errors?: ValidationError[] | string | string[];
 
-  constructor(message: string, statusCode: number, isOperational = true) {
+  constructor(
+    message: string,
+    statusCode: number,
+    errors?: ValidationError[] | string | string[]
+  ) {
     super(message);
-
     this.statusCode = statusCode;
-    this.isOperational = isOperational;
+    this.errors = errors;
 
-    // Ensure the name is the same as the class name
-    Object.setPrototypeOf(this, new.target.prototype);
-
-    // Capture stack trace
-    Error.captureStackTrace(this);
+    // Ensure correct prototype chain
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, AppError);
+    }
   }
 }
